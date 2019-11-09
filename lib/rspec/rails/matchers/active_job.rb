@@ -160,7 +160,7 @@ module RSpec
           end
 
           def serialized_at
-            @at == :no_wait ? nil : @at.to_f
+            @at == :no_wait ? nil : @at.try(:to_f) || @at
           end
 
           def set_expected_number(relativity, count)
