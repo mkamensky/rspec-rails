@@ -73,7 +73,7 @@ module RSpec
         def arguments_match?(job)
           @args =
             if @mail_args.any?
-              base_mailer_args + @mail_args
+              base_mailer_args + [args: @mail_args]
             elsif @mailer_class && @method_name
               base_mailer_args + [any_args]
             elsif @mailer_class
@@ -118,9 +118,8 @@ module RSpec
         def mail_job_message(job)
           mailer_method = job[:args][0..1].join('.')
 
-          mailer_args = job[:args][3..-1]
           msg_parts = []
-          msg_parts << "with #{mailer_args}" if mailer_args.any?
+          msg_parts << "with #{::ActiveJob::Arguments.deserialize(job[:args][3]['args'])}" if job[:args][3]
           msg_parts << "on queue #{job[:queue]}" if job[:queue] && job[:queue] != 'mailers'
           msg_parts << "at #{Time.at(job[:at])}" if job[:at]
 
