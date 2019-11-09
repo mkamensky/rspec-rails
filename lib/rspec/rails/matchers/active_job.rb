@@ -149,7 +149,7 @@ module RSpec
           end
 
           def other_attributes_match?(job)
-            serialized_attributes.all? { |key, value| value == job[key] }
+            serialized_attributes.all? { |key, value| Support::FuzzyMatcher.values_match?(value, job[key]) }
           end
 
           def serialized_attributes
